@@ -1,4 +1,5 @@
 import re
+#import time
 
 from collections import Counter
 
@@ -19,10 +20,20 @@ class WordCountJob(CCSparkJob):
             StructField("df", LongType(), True)]), True)
     ])
 
+    #search = 'nintendo'
+    #regex = "r\'\\b"+search+"\\b\'"
     # simple Unicode-aware tokenization
     # (not suitable for CJK languages)
-    # word_pattern = re.compile('\w+', re.UNICODE)
-    word_pattern = re.compile(r'\btwitch\b', re.ASCII | re.IGNORECASE)
+    #word_pattern = None
+    #word_pattern = re.compile('\w+', re.UNICODE)
+    word_pattern = re.compile(r'\bnintendo\b', re.ASCII | re.IGNORECASE)
+    #word_pattern = re.compile(regex, re.ASCII | re.IGNORECASE)
+
+    #def set_word_pattern(self, search):
+        #regex = "r\'\\b"+search+"\\b\'"
+        #print(regex)
+        #time.sleep(30)
+        #word_pattern = re.compile(regex, re.ASCII | re.IGNORECASE)
 
     @staticmethod
     def reduce_by_key_func(a, b):

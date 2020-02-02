@@ -34,6 +34,7 @@ class CCSparkJob(object):
     ])
 
     # description of input and output shown in --help
+    #search_descr = "Key to be searched (ignores case)"
     input_descr = "Path to file listing input paths"
     output_descr = "Name of output table (saved in spark.sql.warehouse.dir)"
 
@@ -59,6 +60,7 @@ class CCSparkJob(object):
         arg_parser = argparse.ArgumentParser(prog=self.name, description=description,
                                              conflict_handler='resolve')
 
+        #arg_parser.add_argument("search", help=self.search_descr)
         arg_parser.add_argument("input", help=self.input_descr)
         arg_parser.add_argument("output", help=self.output_descr)
 
@@ -124,6 +126,8 @@ class CCSparkJob(object):
 
     def run(self):
         self.args = self.parse_arguments()
+
+        #self.set_word_pattern(self.args.search)
 
         conf = SparkConf()
 

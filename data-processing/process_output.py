@@ -2,6 +2,8 @@
 #from pyspark.sql import SQLContext, SparkSession
 
 import os
+
+from pyspark.sql.functions import lit
 #import psycopg2
 #from db_config import config
 
@@ -25,7 +27,10 @@ def write_to_db(self, sqlc):
         df = sqlc.read.parquet("spark-warehouse/"+self.args.output)
         #df.printSchema()
         # restructure the dataframe
-        rdf = df.select("key", "val.tf", "val.df")
+        #print(self.args.search)
+
+        time = self.args.input.split('/')[2].split('_')[0]
+        rdf = df.select("key", "val.tf", "val.df").withColumn("time",lit(time))
         # Connect to the PostgreSQL database server
         #conn = None
 
@@ -71,7 +76,8 @@ def write_to_db(self, sqlc):
 
                 # close the communication with the PostgreSQL
                 #cur.close()
-        except(Exception, psycopg2.DatabaseError) as error:
+        #except(Exception, psycopg2.DatabaseError) as error:
+        except(Exception) as error:
                 print(error)
         #finally:
                 #if conn is not None:
