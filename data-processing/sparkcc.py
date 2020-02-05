@@ -16,7 +16,7 @@ from pyspark import SparkContext, SparkConf
 from pyspark.sql import SQLContext, SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, LongType
 
-from process_output import write_to_db
+from dbwrite import dbWrite
 
 LOGGING_FORMAT = '%(asctime)s %(levelname)s %(name)s: %(message)s'
 
@@ -34,7 +34,6 @@ class CCSparkJob(object):
     ])
 
     # description of input and output shown in --help
-    #search_descr = "Key to be searched (ignores case)"
     input_descr = "Path to file listing input paths"
     output_descr = "Name of output table (saved in spark.sql.warehouse.dir)"
 
@@ -60,7 +59,6 @@ class CCSparkJob(object):
         arg_parser = argparse.ArgumentParser(prog=self.name, description=description,
                                              conflict_handler='resolve')
 
-        #arg_parser.add_argument("search", help=self.search_descr)
         arg_parser.add_argument("input", help=self.input_descr)
         arg_parser.add_argument("output", help=self.output_descr)
 
@@ -127,8 +125,6 @@ class CCSparkJob(object):
     def run(self):
         self.args = self.parse_arguments()
 
-        #self.set_word_pattern(self.args.search)
-
         conf = SparkConf()
 
         if self.args.spark_profiler:
@@ -143,10 +139,7 @@ class CCSparkJob(object):
 
         self.run_job(sc, sqlc)
 
-        write_to_db(self, sqlc)
-#        breakpoint()
-#        df = sqlc.read.parquet("spark-warehouse/wordfreq")
-#        df.show()
+        dbWrite(self, sqlc)
 
         if self.args.spark_profiler:
             sc.show_profiles()
@@ -185,7 +178,7 @@ class CCSparkJob(object):
         self.log_aggregators(sc)
 
     def process_warcs(self, id_, iterator):
-        
+
         s3pattern = re.compile('^s3://([^/]+)/(.+)')
         base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -234,7 +227,7 @@ class CCSparkJob(object):
 
             no_parse = (not self.warc_parse_http_header)
             try:
-                
+
                 archive_iterator = ArchiveIterator(stream,
                                                    no_record_parse=no_parse)
                 for res in self.iterate_records(uri, archive_iterator):

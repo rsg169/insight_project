@@ -1,6 +1,6 @@
 # correspondance between archive date and a signature string in the index path
 DICT = {
-        'January 2017' : '2019-04', 'February 2017' : '2017-09', 'March 2017' : '2017-13', 'April 2017' : '2017-17', 'May 2017' : '2017-22', 'June 2017' : '2017-26',
+        'January 2017' : '2017-04', 'February 2017' : '2017-09', 'March 2017' : '2017-13', 'April 2017' : '2017-17', 'May 2017' : '2017-22', 'June 2017' : '2017-26',
         'July 2017' : '2017-30', 'August 2017' : '2017-34', 'September 2017' : '2017-39', 'October 2017'   : '2017-43', 'November 2017'  : '2017-47', 'December 2017'  : '2017-51',
         'January 2018' : '2018-05', 'February 2018' : '2018-09', 'March 2018' : '2018-13', 'April 2018' : '2018-17', 'May 2018' : '2018-22', 'June 2018' : '2018-26', 
         'July 2018' : '2018-30', 'August 2018' : '2018-34', 'September 2018' : '2018-39', 'October 2018'   : '2018-43', 'November 2018'  : '2018-47', 'December 2018'  : '2018-51',
@@ -15,6 +15,7 @@ LIST = [
         'January 2019', 'February 2019', 'March 2019', 'April 2019', 'May 2019', 'June 2019', 'July 2019', 'August 2019', 'September 2019', 'October 2019', 'November 2019', 'December 2019',
        ]
 
+# returns a list of paths to index files that satisfy the time constraints specified by the user
 def getIndexes(start,end):
 
     i = LIST.index(start)
