@@ -16,7 +16,11 @@ from pyspark import SparkContext, SparkConf
 from pyspark.sql import SQLContext, SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, LongType
 
-from dbwrite import dbWrite
+#from dbwrite import dbWrite
+from pyspark.sql.functions import lit
+#from pyspark.sql import functions as F
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
 
 LOGGING_FORMAT = '%(asctime)s %(levelname)s %(name)s: %(message)s'
 
@@ -139,7 +143,7 @@ class CCSparkJob(object):
 
         self.run_job(sc, sqlc)
 
-        dbWrite(self, sqlc)
+#        dbWrite(self, sqlc)
 
         if self.args.spark_profiler:
             sc.show_profiles()
@@ -168,12 +172,53 @@ class CCSparkJob(object):
         output = input_data.mapPartitionsWithIndex(self.process_warcs) \
             .reduceByKey(self.reduce_by_key_func)
 
+        try:
+                DBURL = os.environ['DB_URL']
+                DBPORT = os.environ['DB_PORT']
+                DBUSER = os.environ['DB_UN']
+                DBPASS = os.environ['DB_PW']
+                DRIVERPATH = os.environ['JDBC_DRIVER']
+
+        except:
+                print('Missing credentials. Please set environment variables appropriately.')
+                exit()
+
+        time = self.args.input.split(':')[2].split('/')[2].split('_')[0]
+        timestamp = time[0:4]+'-'+time[4:6]+'-'+time[6:8]+' '+time[8:10]+':'+time[10:12]+':'+time[12:14]
+#        format = "yyyy-MM-dd HH:mm:ss"
+
         sqlc.createDataFrame(output, schema=self.output_schema) \
             .coalesce(self.args.num_output_partitions) \
-            .write \
-            .format(self.args.output_format) \
-            .option("compression", self.args.output_compression) \
-            .saveAsTable(self.args.output)
+            .select("key", "val.tf", "val.df").withColumn("time",to_timestamp(lit(timestamp))) \
+            .write.mode('append') \
+            .format('jdbc') \
+            .option('url', 'jdbc:postgresql://'+DBURL+':'+DBPORT+'/'+DBUSER) \
+            .option('dbtable', 'wordfreqtbl') \
+            .option('user', DBUSER) \
+            .option('password', DBPASS) \
+            .option('driver', 'org.postgresql.Driver') \
+            .save()
+
+#'yyyy-MM-dd HH:mm:ss'
+#.select(to_timestamp("time").alias('time'))
+#.withColumn("time",col("time").cast(TimestampType))
+#.withColumn("time", expr("CAST(timestamp AS TIMESTAMP)"))
+#.withColumn("time",lit(timestamp)) \
+#.cast("timestamp")
+
+#.write \
+#            .format(self.args.output_format) \
+#            .option("compression", self.args.output_compression) \
+#            .saveAsTable(self.args.output)
+
+#        df.write.mode('append') \
+#                .format('jdbc') \
+#                .option('url', 'jdbc:postgresql://'+DBURL+':'+DBPORT+'/'+DBUSER) \
+#                .option('dbtable', 'wordfreqtbl') \
+#                .option('user', DBUSER) \
+#                .option('password', DBPASS) \
+#                .option('driver', 'org.postgresql.Driver') \
+#                .save()
 
         self.log_aggregators(sc)
 
