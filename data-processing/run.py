@@ -16,6 +16,7 @@ sc._jsc.hadoopConfiguration().set("fs.s3.impl", "org.apache.hadoop.fs.s3a.S3AFil
 submit_file = open('submit.sh','w+')
 cleanup_file = open('cleanup.sh','w+')
 submit_file.write('#!/bin/sh'+'\n')
+submit_file.write('start=`date +%s`'+'\n')
 cleanup_file.write('#!/bin/sh'+'\n')
 cleanup_file.write('rm submit.sh'+'\n')
 cleanup_file.write('rm -rf input'+'\n')
@@ -49,6 +50,9 @@ for index in indexList:
         #input_file.write('s3://commoncrawl/'+archive+'\n')
 
 input_file.close()
+submit_file.write('end=`date +%s`'+'\n')
+submit_file.write('runtime=$((end-start))'+'\n')
+submit_file.write('echo $runtime'+'\n')
 submit_file.close()
 os.popen('hdfs dfs -copyFromLocal $PWD/input /')
 cleanup_file.close()

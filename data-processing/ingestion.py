@@ -14,10 +14,13 @@ sc._jsc.hadoopConfiguration().set("fs.s3.impl", "org.apache.hadoop.fs.s3a.S3AFil
 
 # open files and write headers
 submit_file = open('submit.sh','w+')
-#cleanup_file = open('cleanup.sh','w+')
+cleanup_file = open('cleanup.sh','w+')
 submit_file.write('#!/bin/sh'+'\n')
-#cleanup_file.write('#!/bin/sh'+'\n')
-#cleanup_file.write('rm submit.sh'+'\n')
+cleanup_file.write('#!/bin/sh'+'\n')
+cleanup_file.write('rm submit.sh'+'\n')
+cleanup_file.write('rm -rf input'+'\n')
+cleanup_file.write('hdfs dfs -rm -r /input'+'\n')
+
 os.popen('hdfs dfs -mkdir /input')
 #cleanup_file.write('rm -rf input/temp'+'\n')
 
@@ -29,7 +32,7 @@ end = input("Enter end month and year: ")
 indexList = getIndexes(start,end)
 
 # Loop to read the index files and create input files from their content
-#os.makedirs(os.getcwd()+'/input/temp', exist_ok=True)
+os.makedirs(os.getcwd()+'/input', exist_ok=True)
 time = ""
 for index in indexList:
     archives = sc.textFile(index).collect()
@@ -39,18 +42,19 @@ for index in indexList:
             time = current_time
             filename = 'input/'+time+'_wet.txt'
             input_file = open(filename,'a+')
-            input_file.write('s3://commoncrawl/'+archive+'\n')
-            os.popen('hdfs dfs -copyFromLocal '+filename+' /'+filename)
+#           input_file.write('s3://commoncrawl/'+archive+'\n')
+#           os.popen('hdfs dfs -copyFromLocal '+filename+' /'+filename)
             submit_file.write(submit_str+filename+' o'+time+'\n')
-#            cleanup_file.write(cleanup_str+'o'+time+'\n')
-        #input_file.write('s3://commoncrawl/'+archive+'\n')
+#           cleanup_file.write(cleanup_str+'o'+time+'\n')
+        input_file.write('s3://commoncrawl/'+archive+'\n')
 
 input_file.close()
 submit_file.close()
-#cleanup_file.close()
+os.popen('hdfs dfs -copyFromLocal $PWD/input /')
+cleanup_file.close()
 
 os.popen('chmod 755 submit.sh')
-#os.popen('chmod 755 cleanup.sh')
+os.popen('chmod 755 cleanup.sh')
 
 # Terminal command to execute the job
 #os.popen('./submit.sh')
