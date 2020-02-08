@@ -26,6 +26,7 @@ os.popen('hdfs dfs -mkdir /input')
 
 # Prompt the user for input
 pdns = input("Enter the Public DNS of this cluster's master node: ")
+key = input("Enter the search term: ")
 start = input("Enter start month and year (e.g. January 2019): ")
 end = input("Enter end month and year: ")
 
@@ -47,7 +48,7 @@ for index in indexList:
             filename = 'input/'+time+'_wet.txt'
             input_file = open(filename,'a+')
             input_file.write('s3://commoncrawl/'+archive+'\n')
-            submit_file.write(submit_str+filename+' o'+time+'\n')
+            submit_file.write(submit_str+filename+' o'+time+' '+key+'\n')
         #input_file.write('s3://commoncrawl/'+archive+'\n')
 
 # Additional commands to record the time of the job

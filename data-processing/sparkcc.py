@@ -38,6 +38,7 @@ class CCSparkJob(object):
     # description of input and output shown in --help
     input_descr = "Path to file listing input paths"
     output_descr = "Name of output table (saved in spark.sql.warehouse.dir)"
+    key_descr = "Term to be searched in the archives"
 
     warc_parse_http_header = True
 
@@ -63,6 +64,7 @@ class CCSparkJob(object):
 
         arg_parser.add_argument("input", help=self.input_descr)
         arg_parser.add_argument("output", help=self.output_descr)
+        arg_parser.add_argument("key", help=self.key_descr)
 
         arg_parser.add_argument("--num_input_partitions", type=int,
                                 default=self.num_input_partitions,

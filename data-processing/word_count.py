@@ -1,4 +1,5 @@
 import re
+import sys
 
 from collections import Counter
 
@@ -22,7 +23,12 @@ class WordCountJob(CCSparkJob):
     # simple Unicode-aware tokenization
     # (not suitable for CJK languages)
     #word_pattern = re.compile('\w+', re.UNICODE)
-    word_pattern = re.compile(r'\bzelda\b', re.ASCII | re.IGNORECASE)
+    #word_pattern = re.compile(r'\bzelda\b', re.ASCII | re.IGNORECASE)
+    word_pattern = None
+
+    @staticmethod
+    def set_search_term(a):
+        WordCountJob.word_pattern = re.compile(r'\b'+re.escape(a)+r'\b', re.ASCII | re.IGNORECASE)
 
     @staticmethod
     def reduce_by_key_func(a, b):
@@ -40,5 +46,6 @@ class WordCountJob(CCSparkJob):
 
 
 if __name__ == '__main__':
+    WordCountJob.set_search_term(sys.argv[3])
     job = WordCountJob()
     job.run()
