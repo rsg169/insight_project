@@ -1,3 +1,5 @@
+# WORD_COUNT.PY: This script is an entry point for a job submission.
+
 import re
 import sys
 
@@ -23,9 +25,9 @@ class WordCountJob(CCSparkJob):
     # simple Unicode-aware tokenization
     # (not suitable for CJK languages)
     #word_pattern = re.compile('\w+', re.UNICODE)
-    #word_pattern = re.compile(r'\bzelda\b', re.ASCII | re.IGNORECASE)
     word_pattern = None
 
+    # This method compiles a regular expression based on the entered search term, of the form r'\b{TERM}\b' 
     @staticmethod
     def set_search_term(a):
         WordCountJob.word_pattern = re.compile(r'\b'+re.escape(a)+r'\b', re.ASCII | re.IGNORECASE)

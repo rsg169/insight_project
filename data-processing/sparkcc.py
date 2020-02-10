@@ -1,3 +1,6 @@
+# SPARKCC.PY: This script defines the parent class of that defined in word_count.py; 
+#             It performs the frequency processing and writes output to the database.
+
 import argparse
 import logging
 import os
@@ -16,7 +19,6 @@ from pyspark import SparkContext, SparkConf
 from pyspark.sql import SQLContext, SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, LongType
 
-#from pyspark.sql.functions import lit
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 
@@ -35,7 +37,7 @@ class CCSparkJob(object):
         StructField("val", LongType(), True)
     ])
 
-    # description of input and output shown in --help
+    # description of input, output, and search term that is shown in --help
     input_descr = "Path to file listing input paths"
     output_descr = "Name of output table (saved in spark.sql.warehouse.dir)"
     key_descr = "Term to be searched in the archives"
@@ -170,6 +172,7 @@ class CCSparkJob(object):
         output = input_data.mapPartitionsWithIndex(self.process_warcs) \
             .reduceByKey(self.reduce_by_key_func)
 
+        # Collect environment information necessary for the database write
         try:
                 DBURL = os.environ['DB_URL']
                 DBPORT = os.environ['DB_PORT']
@@ -188,11 +191,11 @@ class CCSparkJob(object):
             .option("compression", self.args.output_compression) \
             .saveAsTable(self.args.output) \
 
-        # Parse the time information
+        # Parse the timestamp
         time = self.args.input.split(':')[2].split('/')[2].split('_')[0]
         timestamp = time[0:4]+'-'+time[4:6]+'-'+time[6:8]+' '+time[8:10]+':'+time[10:12]+':'+time[12:14]
 
-        # Write the output to the PostgreSQL database
+        # Write the output to the PostgreSQL database via JDBC
         sqlc.createDataFrame(output, schema=self.output_schema) \
             .coalesce(self.args.num_output_partitions) \
             .select("key", "val.tf", "val.df").withColumn("time",to_timestamp(lit(timestamp))) \
