@@ -30,7 +30,7 @@ The baseline code was borrowed from the open-source cc-pyspark project, which is
 
 ## Architecture
 
-The pipeline first links the compressed Common Crawl archives on Amazon S3 to the PySpark processor. The computed time and frequency output is stored in a PostgreSQL database, which is queried by the Plotly Falcon SQL Client. From here, the data can be plotted uploaded for display in a browser using Plotly Chart Studio.
+The pipeline first links the compressed Common Crawl archives on Amazon S3 to the PySpark processor. The time and frequency output is stored in a PostgreSQL database, where it is retrieved by the Plotly Falcon SQL Client. From here, the data can be plotted and uploaded for display in a browser using Plotly Chart Studio.
   
 
 ## Dataset
