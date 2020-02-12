@@ -34,7 +34,7 @@ indexList = getIndexes(start,end)
 # Loop to read the index files and create input files from their content
 time = ""
 for index in indexList:
-    count = 0
+    parity_count = 0
     archives = sc.textFile(index).collect()
     for archive in archives:
         current_time = archive.split('/')[5].split('-')[2]
@@ -43,14 +43,15 @@ for index in indexList:
             filename = 'input/'+time+'_wet.txt'
             input_file = open(filename,'a+')
             input_file.write('s3://commoncrawl/'+archive+'\n')
-            #os.popen('hdfs dfs -copyFromLocal '+filename+' /input')
-            # The following conditional statement is an effort to collect an equal nunber of timestamped inputs from each monthly index (just for test case)
-            if count < 5:
+
+            # Run an equal nunber of timestamped inputs from the submit file, as set by parity_count (for testing)
+            if parity_count < 5:
                 submit_file.write(submit_str+filename+' o'+time+' '+key+'\n')
-                count += 1
+                parity_count += 1
             else:
                 submit_file.write('#'+submit_str+filename+' o'+time+' '+key+'\n')
-        #input_file.write('s3://commoncrawl/'+archive+'\n') # ATTENTION: this line is makes the difference between a test case and a full job
+        # ATTENTION: the next line makes the difference between a test case and a full job
+        #input_file.write('s3://commoncrawl/'+archive+'\n')
 
 # Additional commands to record the runtime of the job
 submit_file.write('end=$(date +%s)\n')
