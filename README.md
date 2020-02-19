@@ -50,7 +50,7 @@ a timestamp also vary over this period.
 
 ## Testing
 
-I chose to analyze a small amount of data centered on the March 3, 2017 release of the critically acclaimed title *The Legend of Zelda: Breath of the Wild*, developed and distributed by Nintendo.
+I chose to analyze a small amount of archive data centered on the March 3, 2017 release of the critically acclaimed title *The Legend of Zelda: Breath of the Wild*, developed and distributed by Nintendo.
 Approximately 10 GB of data was processed, and the runtime was 3149 seconds.
 
 ![Testcase Plot](images/testcase_plot.png)
