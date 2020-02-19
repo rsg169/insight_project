@@ -37,7 +37,7 @@ The frequency analysis code was borrowed from the open-source cc-pyspark project
 The data pipeline links the Common Crawl archive on Amazon S3 to the PySpark processor, which, in turn, links to a PostgreSQL database that stores the output. The database is then queried by the Falcon 
 SQL Client by Plotly, which visualizes the data. Finally, the result is uploaded for display in a browser using Plotly Chart Studio.
 
-![pipeline](pipeline.png)  
+![pipeline](images/pipeline.png)  
 
 ## Dataset
 
@@ -47,11 +47,15 @@ archive is stored in three formats and updated monthly. The monthly data is acce
 The data is inconsistent. Monthly data is not contiguous prior to December 2016. The size of the collected data varies from month to month. The number of timestamps and number of files associated with 
 a timestamp also vary over this period.
 
-## Engineering challenges
+## Engineering challenge
 
 My challenge was a bottleneck that results from scaling the input. The response was to scale the cluster outward (by adding more workers) and upward (by allocating more resources to the workers). 
 Conservative estimates for the number of workers required for a reasonable turnaround of 24 hours were obtained using the processing rate established through testing. Efforts to scale the cluster
-upward were facilitated by the variety of instance types offered through AWS, although the improvements on turnaround were marginal.
+upward were facilitated by the variety of instance types offered through AWS, although the impact on turnaround was marginal. Below is a table describing the results.
 
-Testing suggested that trends are discernible by processing only a fraction of the available data. Turnaround estimates were improved by restricting the ingestion to 1% of 
-the available input, which is still a significant amount (1.3 TB).
+![130 TB Turnaround](images/130tb_turnaround.png)
+
+Moreover, testing suggested that trends are discernible by processing only a fraction of the available data. Turnaround estimates were significantly improved by restricting the ingestion to 1% of 
+the available input, as shown below.
+
+![1.3 TB Turnaround](images/1.3tb_turnaround.png)
