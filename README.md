@@ -37,7 +37,7 @@ The frequency analysis code was borrowed from the open-source cc-pyspark project
 The data pipeline links the Common Crawl archive on Amazon S3 to the PySpark processor, which, in turn, links to a PostgreSQL database that stores the output. The database is then queried by the Falcon 
 SQL Client by Plotly, which visualizes the data. The result is then uploaded for display in a browser using Plotly Chart Studio.
 
-![image](/Users/ryan/Downloads/pipeline.png)  
+![image](pipeline.png)  
 
 ## Dataset
 
