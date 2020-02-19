@@ -67,4 +67,4 @@ upward were facilitated by the variety of instance types offered through AWS, al
 Moreover, testing suggested that trends are discernible by processing only a fraction of the available data. Turnaround estimates were significantly improved by restricting the ingestion to 1% of 
 the available input, as shown below.
 
-![1.3 TB Turnaround](images/1.3tb_turnaround.png)
+![1.3 TB Turnaround](images/1tb_turnaround.png)
