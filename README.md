@@ -14,7 +14,7 @@
 
 ## How to install and get it up and running
 
-This tool was tested on a computing cluster comprised of Elastic Compute Cloud (EC2) instances. Development utilized Python (v3.5.2) and execution required Apache Hadoop (v2.7.6) and Apache Spark
+The tool was tested on a computing cluster comprised of Elastic Compute Cloud (EC2) instances. Development utilized Python (v3.5.2) and execution required Apache Hadoop (v2.7.6) and Apache Spark
 (v2.4.0).  To start, clone the repository on the master node of your cluster, and type `python3 start.py` in the created directory. Copy the master node Public DNS (IPv4) to your clipboard to respond
 to the prompt.
 
@@ -26,7 +26,7 @@ to the prompt.
 
 ## Introduction
 
-This tool utilizes the distributed-processing capabilities of Spark via the Python language to compute the term and document frequency of an entered search key across the publicly accessible Common 
+The tool utilizes the distributed-processing capabilities of Spark via the Python language to compute the term and document frequency of an entered search key across the publicly accessible Common 
 Crawl archive over a time range requested by the user (restricted from December 2016 to the present). For now, the search only supports and matches characters in the ASCII encoding standard.
 
 The frequency analysis code was borrowed from the open-source cc-pyspark project, which is a collection of useful PySpark tools that process Common Crawl data.  The repository for cc-pyspark is located 
@@ -35,9 +35,9 @@ The frequency analysis code was borrowed from the open-source cc-pyspark project
 ## Architecture
 
 The data pipeline links the Common Crawl archive on Amazon S3 to the PySpark processor, which, in turn, links to a PostgreSQL database that stores the output. The database is then queried by the Falcon 
-SQL Client by Plotly, which visualizes the data. The result is then uploaded for display in a browser using Plotly Chart Studio.
+SQL Client by Plotly, which visualizes the data. Finally, the result is uploaded for display in a browser using Plotly Chart Studio.
 
-![image](pipeline.png)  
+![pipeline](pipeline.png)  
 
 ## Dataset
 
@@ -49,13 +49,9 @@ a timestamp also vary over this period.
 
 ## Engineering challenges
 
-My challenge is a bottleneck that results from scaling the input. My response was to scale my cluster horizontally (by adding more workers) and vertically (by allocating more resources to the workers). 
-Conservative estimates for the number of workers required for a reasonable turnaround of 24 hours were obtained using the processing rate established through testing. Efforts to scale the cluster 
-vertically were facilitated by the variety of instance types offered through AWS, but the improvements were marginal.
+My challenge was a bottleneck that results from scaling the input. The response was to scale the cluster outward (by adding more workers) and upward (by allocating more resources to the workers). 
+Conservative estimates for the number of workers required for a reasonable turnaround of 24 hours were obtained using the processing rate established through testing. Efforts to scale the cluster
+upward were facilitated by the variety of instance types offered through AWS, although the improvements on turnaround were marginal.
 
-Testing suggested that trends are discernible by processing only a fraction of the available data. Beyond modifications to the cluster, estimates were improved by restricting the processing to 1% of 
-the available input, which is still a significant amount (1.3 TB). 
-
-## Trade-offs
-
-Coming Soon.
+Testing suggested that trends are discernible by processing only a fraction of the available data. Turnaround estimates were improved by restricting the ingestion to 1% of 
+the available input, which is still a significant amount (1.3 TB).
