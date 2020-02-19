@@ -47,6 +47,15 @@ archive is stored in three formats and updated monthly. The monthly data is acce
 The data is inconsistent. Monthly data is not contiguous prior to December 2016. The size of the collected data varies from month to month. The number of timestamps and number of files associated with 
 a timestamp also vary over this period.
 
+
+## Testing
+
+I chose to analyze a small amount of data centered on the March 3, 2017 release of the critically acclaimed title *The Legend of Zelda: Breath of the Wild*, developed and distributed by Nintendo.
+Approximately 10 GB of data was processed, and the runtime was 3149 seconds.
+
+![Testcase Plot](images/testcase_plot.png)
+
+
 ## Engineering challenge
 
 My challenge was a bottleneck that results from scaling the input. The response was to scale the cluster outward (by adding more workers) and upward (by allocating more resources to the workers). 
