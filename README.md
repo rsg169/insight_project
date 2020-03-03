@@ -14,10 +14,9 @@
 
 ## How to install and get it up and running
 
-The tool was tested on a computing cluster comprised of Elastic Compute Cloud (EC2) instances. Development utilized Python (v3.5.2) and execution required Apache Hadoop (v2.7.6) and Apache Spark
-(v2.4.0).  To start, clone the repository on the master node of your cluster, and type `python3 start.py` in the created directory. Copy the master node Public DNS (IPv4) to your clipboard to respond
-to the prompt.
-
+This tool was tested on a computing cluster comprised of Elastic Compute Cloud (EC2) instances. Development utilized Python (v3.5.2) and execution required Apache Hadoop (v2.7.6) and Apache Spark 
+(v2.4.0).  To start, clone the repository on the master node of your cluster, navigate to the `data-processing` directory, and type `python3 start.py`. You will be prompted to enter the master node 
+Public DNS (IPv4), the term to be searched, and the time range of the search.
   
 
 <hr/>
